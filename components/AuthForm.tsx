@@ -1,38 +1,28 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { authFormSchema } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import FormInputField from "./FormInputField";
 import Logo from "./Logo";
+import { Loader2 } from "lucide-react";
 
 interface Props {
   type: "sign-in" | "sign-up";
 }
 
-type FormType = z.infer<typeof formSchema>;
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6).max(255),
-});
+type FormType = z.infer<typeof authFormSchema>;
 
 const AuthForm = ({ type }: Props) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<FormType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(authFormSchema),
     defaultValues: {
       email: "",
     },
@@ -41,7 +31,9 @@ const AuthForm = ({ type }: Props) => {
   function onSubmit(values: FormType) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    setLoading(true);
     console.log(values);
+    setLoading(false);
   }
 
   return (
@@ -64,45 +56,21 @@ const AuthForm = ({ type }: Props) => {
       ) : (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FormField
+            <FormInputField
               control={form.control}
+              label="Email"
               name="email"
-              render={({ field }) => (
-                <FormItem className="form-item">
-                  <FormLabel className="form-label">Email</FormLabel>
-                  <div className="flex w-full flex-col">
-                    <FormControl>
-                      <Input
-                        className="input-class"
-                        placeholder="Enter your email"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="form-message mt-2" />
-                  </div>
-                </FormItem>
-              )}
+              placeholder="Enter your email"
             />
-            <FormField
+            <FormInputField
               control={form.control}
+              label="Password"
               name="password"
-              render={({ field }) => (
-                <FormItem className="form-item">
-                  <FormLabel className="form-label">Password</FormLabel>
-                  <div className="flex w-full flex-col">
-                    <FormControl>
-                      <Input
-                        className="input-class"
-                        placeholder="Enter your password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="form-message mt-2" />
-                  </div>
-                </FormItem>
-              )}
+              placeholder="Enter your password"
             />
-            <Button type="submit">Submit</Button>
+            <Button className="form-btn" type="submit">
+              {loading ? <Loader2 className="animate-spin" size={20} /> : <></>}
+            </Button>
           </form>
         </Form>
       )}
