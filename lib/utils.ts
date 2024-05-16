@@ -195,10 +195,28 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = z.object({
-  email: z.string().email(),
-  password: z
-    .string()
-    .min(6, { message: "Password cannot be less than 6 characters" })
-    .max(255, { message: "Password cannot exceed 255 characters" }),
-});
+export const authFormSchema = (type: "sign-in" | "sign-up") =>
+  z.object({
+    // sign up
+    firstName:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    lastName:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    address1:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    city:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    state:
+      type === "sign-in" ? z.string().optional() : z.string().min(2).max(2),
+    postalCode:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(6),
+    dateOfBirth:
+      type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    ssn: type === "sign-in" ? z.string().optional() : z.string().min(3).max(50),
+    // both
+    email: z.string().email().max(255),
+    password: z
+      .string()
+      .min(6, { message: "Password cannot be less than 6 characters" })
+      .max(255, { message: "Password cannot exceed 255 characters" }),
+  });
