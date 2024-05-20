@@ -13,6 +13,7 @@ import Logo from "./Logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/actions/user.actions";
+import PlaidLink from "./PlaidLink";
 
 interface Props {
   type: "sign-in" | "sign-up";
@@ -73,7 +74,9 @@ const AuthForm = ({ type }: Props) => {
         </div>
       </header>
       {user ? (
-        <div className="flex flex-col gap-4">{/* Plaid Link */}</div>
+        <div className="flex flex-col gap-4">
+          <PlaidLink />
+        </div>
       ) : (
         <>
           <Form {...form}>
