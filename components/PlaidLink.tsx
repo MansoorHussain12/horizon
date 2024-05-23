@@ -26,7 +26,7 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
       router.push("/");
     },
-    [user]
+    [user, router]
   );
 
   useEffect(() => {
