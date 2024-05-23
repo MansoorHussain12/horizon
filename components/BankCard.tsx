@@ -15,11 +15,11 @@ const BankCard = ({
         className="bank-card"
       >
         <div className="bank-card_content">
-          <div className="">
+          <div>
             <h1 className="text-16 font-semibold text-white">
               {account.name || userName}
             </h1>
-            <p className="font-ibm-plex-serif font-black text-black-1">
+            <p className="font-ibm-plex-serif font-black text-blue-25">
               {formatAmount(account.currentBalance)}
             </p>
           </div>
