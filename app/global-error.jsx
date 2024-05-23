@@ -11,9 +11,7 @@ export default function GlobalError({ error }) {
 
   return (
     <html>
-      <body>
-        <Error />
-      </body>
+      <body>{/* Your Error component here... */}</body>
     </html>
   );
 }
