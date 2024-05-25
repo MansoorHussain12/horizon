@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next-nprogress-bar";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +23,8 @@ const AuthForm = ({ type }: Props) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [navigating, setNavigating] = useState(false);
+  const [error, setError] = useState("");
 
   const formSchema = authFormSchema(type);
 
@@ -38,6 +40,8 @@ const AuthForm = ({ type }: Props) => {
   // 2. Define a submit handler.
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+
+    setError("");
 
     try {
       // Sign up with Appwrite & create plaid token
@@ -67,9 +71,19 @@ const AuthForm = ({ type }: Props) => {
           password: data.password,
         });
 
-        if (response) router.push("/");
+        if (!response) {
+          setNavigating(false);
+          setError("The email or password is incorrect");
+        } else {
+          setNavigating(true);
+          router.push("/");
+        }
       }
     } catch (error) {
+      setError("An error occurred while signing in");
+
+      setNavigating(false);
+
       console.log(error);
     } finally {
       setIsLoading(false);
@@ -184,11 +198,15 @@ const AuthForm = ({ type }: Props) => {
               />
 
               <div className="flex flex-col gap-4">
-                <Button type="submit" disabled={isLoading} className="form-btn">
+                <Button
+                  type="submit"
+                  disabled={isLoading || navigating}
+                  className="form-btn"
+                >
                   {isLoading ? (
                     <>
                       <Loader2 size={20} className="animate-spin" /> &nbsp;
-                      Loading...
+                      Signing In...
                     </>
                   ) : type === "sign-in" ? (
                     "Sign In"
@@ -199,6 +217,8 @@ const AuthForm = ({ type }: Props) => {
               </div>
             </form>
           </Form>
+
+          {error && <div className="text-red-500 mt-2">{error}</div>}
 
           <footer className="flex justify-center gap-1">
             <p className="text-14 font-normal text-gray-600">

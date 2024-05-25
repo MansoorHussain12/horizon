@@ -3,6 +3,17 @@
 import { logoutAccount } from "@/lib/actions/user.actions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "./ui/button";
 
 const Footer = ({ user, type = "desktop" }: FooterProps) => {
   const router = useRouter();
@@ -32,9 +43,34 @@ const Footer = ({ user, type = "desktop" }: FooterProps) => {
           {user.email}
         </p>
       </div>
-      <div className="footer_image" onClick={handleLogout}>
+      {/* <div className="footer_image" onClick={handleLogout}>
         <Image src="icons/logout.svg" fill alt="logout" />
-      </div>
+      </div> */}
+      <Dialog>
+        <div className="footer_image">
+          <DialogTrigger asChild>
+            <Image src="icons/logout.svg" fill alt="logout" />
+          </DialogTrigger>
+        </div>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Logout</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
+            <Button variant="default" type="button" onClick={handleLogout}>
+              Logout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </footer>
   );
 };
