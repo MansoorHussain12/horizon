@@ -36,6 +36,7 @@ const Homepage = async ({ searchParams: { id, page } }: SearchParamProps) => {
             totalCurrentBalance={totalCurrentBalance}
           />
         </header>
+
         <RecentTransactions
           accounts={accountsData}
           transactions={transactions}
